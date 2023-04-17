@@ -1,0 +1,89 @@
+/**
+ * Minified by jsDelivr using clean-css v4.2.1.
+ * Original file: /npm/reset-css@5.0.1/reset.css
+ * 
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+ a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,caption,center,cite,code,dd,del,details,dfn,div,dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,i,iframe,img,ins,kbd,label,legend,li,main,mark,menu,nav,object,ol,output,p,pre,q,ruby,s,samp,section,small,span,strike,strong,sub,summary,sup,table,tbody,td,tfoot,th,thead,time,tr,tt,u,ul,var,video { margin:0; padding:0; border:0; font-size:100%; font:inherit; vertical-align:baseline } article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section { display:block } [hidden] { display:none } body { line-height:1 } menu,ol,ul { list-style:none } blockquote,q { quotes:none } blockquote:after,blockquote:before,q:after,q:before { content:''; content:none } table { border-collapse:collapse; border-spacing:0 } 
+
+/* reset */
+html { /* 1rem = 10px */ font-size: 62.5%; } 
+body { width:100%; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); font-family: '맑은 고딕','Malgun Gothic','애플 SD 산돌고딕 Neo','Apple SD Gothic Neo','Helvetica Neue','Helvetica',sans-serif; font-size: 1.6rem; word-break: keep-all; white-space: -moz-pre-wrap; white-space: -pre-wrap; white-space: -o-pre-wrap; word-wrap: break-word; -webkit-font-smoothing: antialiased; background: #fff; overflow-x: hidden; } 
+body *,*::before, *::after { box-sizing: border-box; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; line-height: .8; } 
+
+img { width: 100%; max-width: 100%; vertical-align: middle; } 
+.a11y-hidden { overflow: hidden; position: absolute !important; clip: rect(0,0,0,0); width: 1px; height: 1px; margin: -1px; border: 0; padding: 0; } 
+.pst-r { position: relative; } 
+.pst-ab { position: absolute } 
+.pst-ab.-l-0 { left: 0; } 
+.pst-ab.-r-0 { right: 0; } 
+.pst-ab.-tl-0 { top: 0; left: 0; } 
+.w-100 { width: 100%; } 
+.wh-100 { width: 100%; height: 100%; } 
+.over-hid { overflow: hidden; } 
+.visib-hidden { visibility: hidden; } 
+.dp-no { display: none; } 
+.dp-b { display: block; } 
+
+#event-wrap [class^='sec0'] { position: relative; overflow: hidden; } 
+
+#event-wrap div div { position:absolute; } 
+
+.on, .off {
+  width: 38.8%;
+  bottom: 50%;
+  right: 30.6%;
+}
+
+.on {
+  animation: fade-out 3.5s linear infinite;
+  -webkit-animation: fade-out 3.5s linear infinite;
+  -moz-animation: fade-out 3.5s linear infinite;
+  -o-animation: fade-out 3.5s linear infinite;
+}
+
+.one_button {
+  width: 9.7%;
+  right: 32.7%;
+  bottom: 50.87%;
+  animation: horizontal 3.5s linear infinite;
+  -webkit-animation: horizontal 3.5s linear infinite;
+  -moz-animation: horizontal 3.5s linear infinite;
+  -o-animation: horizontal 3.5s linear infinite;
+}
+
+.paper-firecracker {width: 100%;top: -2%;left: 4%; animation:fade-out-50-filtergray 3.5s linear infinite;}
+
+.coins {width: 88%;top: 2.1%;right: 7%;animation-name:float, fade-out-50-filtergray;animation-duration: 1.6s, 3.5s;animation-fill-mode:both, linear;animation-iteration-count:infinite;}
+
+.coupon1 {width: 33.5%;top: 2.8%;left: -3%;animation-name:float, fade-out-50-filtergray;animation-duration: 1.6s, 3.5s;animation-fill-mode:both, linear;animation-iteration-count:infinite;}
+.coupon2 {width: 33.5%;top: 43%;left: -9%;animation-name:float, fade-out-50-filtergray;animation-duration: 1.6s, 3.5s;animation-fill-mode:both, linear;animation-iteration-count:infinite;}
+.coupon3 {width: 48%;top: 25.9%;right: -24.9%;animation-name:float, fade-out-50;animation-duration: 1.6s, 3.5s;animation-fill-mode:both, linear;animation-iteration-count:infinite;}
+
+.gift1 {width: 18%;top: 24.8%;left: 1%;animation-name:float, fade-out-50-filtergray;animation-duration: 1.6s, 3.5s;animation-fill-mode:both, linear;animation-iteration-count:infinite;}
+.gift2 {width: 17%;top: 9.5%;right: 6.5%;animation-name:float, fade-out-50-filtergray;animation-duration: 1.6s, 3.5s;animation-fill-mode:both, linear;animation-iteration-count:infinite;}
+.gift3 {width: 25.5%;top: 40.85%;right: -0.6%;animation-name:float, fade-out-50-filtergray;animation-duration: 1.6s, 3.5s;animation-fill-mode:both, linear;animation-iteration-count:infinite;}
+
+#adTermsBtn {position:unset !important;}
+#adTermsBtn > a {
+  position: absolute;
+  width: 100%;
+  height: 10%;
+  left: 0%;
+  bottom: 4.4%;
+  z-index: 100;
+  text-indent: -999px;
+}
+
+.btn-arrow-right {
+  width: 3.4%;
+  right: 12%;
+  bottom: 8.35%;
+}
+
+.btn-arrow-right>img {
+  -webkit-animation: btn-arrow 1s linear both infinite alternate;
+  -moz-animation: btn-arrow 1s linear both infinite alternate;
+  -o-animation: btn-arrow 1s linear both infinite alternate;
+  animation: btn-arrow 1s linear both infinite alternate;
+}

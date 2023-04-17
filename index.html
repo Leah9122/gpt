@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title></title>
+<meta charset="utf-8">
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script type="text/javascript">
+/***************************************************************/
+/*수정하면 안됨                                                */
+/***************************************************************/
+jQuery.extend({
+getParameter: function(strParamName){
+  var strReturn = "";
+  var strHref = window.location.href;
+  var bFound=false;
+  
+  var cmpstring = strParamName + "=";
+  var cmplen = cmpstring.length;
+  
+  if ( strHref.indexOf("?") > -1 ) {
+    var strQueryString = strHref.substr(strHref.indexOf("?")+1);
+    var aQueryString = strQueryString.split("&");
+
+    for ( var iParam = 0; iParam < aQueryString.length; iParam++ ){
+      if (aQueryString[iParam].substr(0,cmplen)==cmpstring){
+        var aParam = aQueryString[iParam].split("=");
+        strReturn = aParam[1];
+        bFound=true;
+        break;
+      }
+    }
+  }
+  if (bFound==false) return "";
+  return strReturn;
+  }
+});
+</script>
+<script type="text/javascript">
+/***************************************************************/
+/*수정하면 안됨                                                */
+/***************************************************************/
+var vCompId = "00010062";
+var vEventId = "00092469";
+var vEventName = "U+멤버스 2월 혜택알림동의 이벤트";
+var vEnterContentType = "";
+var vEnterContentId = "";
+var vEnterContentName = "";
+var vContentId = "";
+var vUrl = "@URL";
+var vPackageName = "";
+var vMarketInfo = "";
+var vMarketDetail = "";
+var vRefEventId = "";
+var vRefEventName = "";
+var vRelatedMem = "";
+var vRelatedCoupon = "";
+var vRelatedStamp = "";
+var vExtUrl1 = "";
+var vExtUrl2 = "";
+var vExtUrl3 = "";
+var vExtUrl4 = "";
+var vExtUrl5 = "";
+var vAosUrl = "";
+var vIosUrl = "";
+var vAosPackageName = "";
+var vIosPackageName = "";
+var vExtUrlCnt = "0";
+var vLinkType = "10";
+var vExtCardCode = "";
+var res = "@res";
+var vCouponCount = "0";
+var vCoupon1 ="@COUPON1";
+var vCoupon2 ="@COUPON2";
+var vCoupon3 ="@COUPON3";
+var vCoupon4 ="@COUPON4";
+var vCoupon5 ="@COUPON5";
+var vCouponName1 ="@COUPON_NAME1";
+var vCouponName2 ="@COUPON_NAME2";
+var vCouponName3 ="@COUPON_NAME3";
+var vCouponName4 ="@COUPON_NAME4";
+var vCouponName5 ="@COUPON_NAME5";
+var targetMenu ="";
+var vEventType = "85";
+var vAdTermsId = "00051165";
+var vTermsVerId = "00000105";
+
+
+
+window.onload = function(e) {
+           if(vEventType == '20'){
+                     for(var i = 1; i<=vCouponCount ; i++){
+                                var couponId = eval("vCoupon" + i);
+                                var couponName = eval("vCouponName" + i);
+                                
+                                document.getElementById("downloadCouponBtn").innerHTML += '<a href="javascript:downloadCoupon(\''+couponId+'\');"'+'\>쿠폰 다운로드('+couponName+')</a><br>';
+                     };
+           }
+           
+           if(vEventType == '84'){
+                     for(var i = 1; i<=vCouponCount ; i++){
+                                var couponId = eval("vCoupon" + i);
+                                var couponName = eval("vCouponName" + i);
+                                
+                                document.getElementById("nowDownloadCouponBtn").innerHTML += '<a href="javascript:couponSync(\''+couponId+'\');"'+'\>쿠폰 다운로드('+couponName+')</a><br>';
+                     };
+           }
+           var extUrlCnt = parseInt(vExtUrlCnt);
+           var extDiv = document.getElementById("urlBtn");
+           if ("10" == vLinkType) {
+                     for (var i = 1; i <= extUrlCnt; i ++ ) {
+                                if (eval("vExtUrl" + i) != "") {
+                                           extDiv.innerHTML += '<div id=\"extUrl' + i + '\" name=\"extUrl' + i + '\"><a href=\"javascript:linkView(' + i + ');\">외부링크'+ i + '</a></div>';   
+                                }
+                     }
+           } else if ("20" == vLinkType) {
+                     extDiv.innerHTML += '<div id=\"appLink\"><a href=\"javascript:linkAppView();\">앱마켓</a></div>';
+           }
+           
+           if("" == res){
+           
+           }else{
+                     var resList = res.split("/");
+                     var list = "";
+                     for(var i = 0; i<resList.length ; i++){
+                                list = list + resList[i] +"<br/>" ;
+                     }
+                     document.getElementById("winNumdiv").innerHTML = "휴대폰 번호 뒷자리를 입력해 주세요.";
+                     document.getElementById("winListdiv").innerHTML = list;
+           }
+}
+//당첨자 검색
+function selectButton(){
+           document.getElementById("winSearchdiv").innerHTML = "";
+           var resList = res.split("/");
+           var list = "";//한줄 리스트
+           var resName = "";
+           var searchNum = document.getElementById("searchNum").value;//검색하기위한 번호
+           if( searchNum == ""){
+                     alert("번호를 입력하세요.");
+                     document.getElementById("winNumdiv").innerHTML = "휴대폰 번호 뒷자리를 입력해 주세요.";
+           }else{
+                     for(var i = 0; i<resList.length ; i++){
+                                list = list + resList[i] ;
+                     }
+                     
+                     var arr = new Array();
+                     var item  = new Array();
+                     var winNum = new Array(); //당첨번호 배열선언
+                     var winName = new Array(); //당첨이름 배열선언
+                     var number = new Array();
+                     var name = new Array();
+                     
+                     var index = 0;
+                     arr = list.split(")"); // 번호만 배열에 담기휘해 )로 split         
+                     for (var j = 0; j < arr.length; j++){
+                     
+                                item[j] = arr[j].split("("); // 번호만 배열에 담기휘해 (로 split
+                                winNum[j] = item[j][1]; //당첨자 번호만 뽑기
+                                winName[j] = item[j][0]; //당첨자이름 
+                                
+                     }
+                     for(var z = 0; z < winNum.length ; z++){
+                                if(searchNum == winNum[z]){
+                                           
+                                           number[index] = winNum[z];
+                                           name[index] = winName[z];
+                                           document.getElementById("winSearchdiv").innerHTML += "<strong>"+name[index] +"["+number[index]+"]님"+"<br/>";
+                                           index ++;
+                                }else{
+
+                                }
+                     }
+                     //당첨내역이 있는지 확인
+                     if(index == 0){
+                                document.getElementById("winNumdiv").innerHTML = "";
+                                document.getElementById("winSearchdiv").innerHTML = "<strong>죄송합니다. 고객님의 당첨 내역이 없습니다."+"<br/><br/></strong>";
+                                
+                     }else{
+                                document.getElementById("winNumdiv").innerHTML = "";
+                                document.getElementById("winSearchdiv").innerHTML += "당첨을 축하드립니다."+"<br/><br/></strong>";
+                     
+                     }
+           }
+}
+//메뉴이동
+function enterEventMenu(){
+
+           //비회원일경우
+           if (!checkMember('20')) {
+                     return;
+           }          
+           
+           window.android.EventMembersMenuPage(targetMenu);
+}
+//멤버십발급형
+function downloadMembership() {
+  //비회원일경우
+  if (!checkMember('20')) {
+    return;
+  }       
+
+  try{
+    window.android.EventDownloadMembership(vContentId, vEventId, '10'); 
+  } catch(e){
+    window.android.EventDownloadMembership(vContentId); 
+  }
+  historySend('20');
+}
+
+//쿠폰다운로드
+function downloadCoupon(vCouponId) {
+  //비회원일경우
+  if (!checkMember('20')) {
+    return;
+  }       
+
+  try{
+    window.android.EventDownloadCoupon(vCouponId, '', vEventId, '20'); 
+  } catch(e){
+    window.android.EventDownloadCoupon(vCouponId, '');
+  }
+  historySend('20');
+}
+
+//스탬프 다운로드
+function downloadStamp() {
+  //비회원일경우
+  if (!checkMember('20')) {
+    return;
+  }       
+
+  try{
+    window.android.EventDownloadStamp(vContentId, vEventId, '30'); 
+  } catch(e){
+    window.android.EventDownloadStamp(vContentId);
+  }
+  historySend('20');
+}
+
+//이벤트응모 - 조건 컨텐츠 있을시
+function enterEventContent() {
+  //비회원일경우
+  if (!checkMember('')) {
+    return;
+  }       
+
+  window.android.EventEnter("", "", vEventId, vEventName, vEnterContentType, vEnterContentId, vEnterContentName);
+}
+
+var clickEvent = false;
+
+//이벤트응모
+function enterEvent(){
+           
+           if (clickEvent) {
+                     return;
+           }
+
+    //비회원일경우
+    if (!checkMember('')) {
+                     return;
+    }    
+
+
+           clickEvent = true;
+           
+    var resultCode;
+    var memberId = $.getParameter("MemberId");
+    
+    if (vEventId == "" || memberId == "") {
+      alert("잘못된 접근입니다.");
+      return;
+    }
+    
+    $.ajax({
+      type: 'POST',
+      async: false,
+      url: '/event/VEventEnter.do?EventId=' + vEventId + '&MemberId=' + memberId,
+      success: function(json) {
+      
+        // 00 : 응모성공.
+        // 10 : 응모실패
+        // 20 : 응모실패(중복 응모)
+        
+        resultCode = json.resultCode;
+        
+        if(resultCode == "00"){
+          window.android.EventEnter("Y", vEventName +"에 응모하셨습니다.", vEventId, vEventName, vEnterContentType, vEnterContentId, vEnterContentName);
+          $("#enterEventBtn").html($("#enterEventBtnLink_Y_Y").html());
+        }else if(resultCode == "10"){
+          window.android.EventEnter("N", "응모에 실패하였습니다. 잠시 후 다시 시도해 주세요.", vEventId, vEventName, vEnterContentType, vEnterContentId, vEnterContentName);
+        }else if(resultCode == "20"){
+          window.android.EventEnter("N", "이미 응모되었습니다.", vEventId, vEventName, vEnterContentType, vEnterContentId, vEnterContentName);
+          $("#enterEventBtn").html($("#enterEventBtnLink_Y_Y").html());
+        }else if(resultCode == "30"){
+          window.android.EventEnter("N", "이벤트가 종료되었습니다.", vEventId, vEventName, vEnterContentType, vEnterContentId, vEnterContentName);
+          $("#enterEventBtn").html($("#enterEventBtnEnd").html());
+        }
+      },
+      
+      error: function() {
+        //결과 리턴
+        //alert(10);
+                     window.android.EventEnter("N", "응모에 실패하였습니다. 잠시 후 다시 시도해 주세요.", vEventId, vEventName, vEnterContentType, vEnterContentId, vEnterContentName);
+      },
+      dataType: "json"  
+    });
+    
+    clickEvent = false;
+
+}
+
+var checkEvent = false;
+
+//이벤트응모 - 데이터 전달
+function getEnterEvent(){
+           var returnStr = "00";
+           
+           if (checkEvent) {
+                     return;
+           }
+
+    //비회원일경우
+    if (!checkMember('')) {
+                     return;
+    }    
+
+
+           checkEvent = true;
+           
+    var resultCode;
+    var memberId = $.getParameter("MemberId");
+    
+    if (vEventId == "" || memberId == "") {
+      returnStr = "40";
+      return returnStr;
+    }
+    
+    $.ajax({
+      type: 'POST',
+      async: false,
+      url: '/event/VEventEnter.do?EventId=' + vEventId + '&MemberId=' + memberId,
+      success: function(json) {
+      
+        // 00 : 응모성공.
+        // 10 : 응모실패
+        // 20 : 응모실패(중복 응모)
+        
+        resultCode = json.resultCode;
+        
+        if(resultCode == "00"){
+          returnStr = "00"; //응모 성공
+        }else if(resultCode == "10"){
+          returnStr = "10"; //응모 실패
+        }else if(resultCode == "20"){
+          returnStr = "20"; //이미 응모
+        }else if(resultCode == "30"){
+          returnStr = "30"; //종료된 이벤트
+        }
+      },
+      
+      error: function() {
+        //결과 리턴
+        //alert(10);
+                     returnStr = "10"; //응모 실패
+      },
+      dataType: "json"  
+    });
+    
+    checkEvent = false;
+    return returnStr;
+
+}
+
+//당첨자확인
+function winCheckEvent() {
+  //비회원일경우
+  if (!checkMember('')) {
+    return;
+  }       
+
+  window.android.EventWinnerCheck(vRefEventId, vRefEventName);
+}
+
+//연결형 Site URL
+function viewSite() {
+  //비회원일경우
+  if (!checkMember('40')) {
+    return;
+  }       
+
+  window.android.EventSiteView(vUrl, vPackageName, vMarketInfo, vMarketDetail);
+  historySend('40');
+}
+
+// 멤버스쇼핑 연결형
+function viewMembersShopSite() {
+  //비회원일경우
+  if (!checkMember('40')) {
+    return;
+  }       
+
+  window.android.EventMembersShopSiteView(vExtUrl1);
+  //ToDo 통계 데이터 등록관련 수정해야함
+  historySend('40');
+}
+
+// U+콕 연결형
+function viewUplusKok() {
+  //비회원일경우
+ if (!checkMember('40')) {
+    return;
+  }       
+
+  window.android.EventCockShopSiteView(vExtUrl1);
+  //ToDo 통계 데이터 등록관련 수정해야함
+  historySend('40');
+}
+
+function linkView(index) {
+           if (1 == index) {
+                     window.android.EventSiteView(vExtUrl1, vPackageName, vMarketInfo, vMarketDetail);
+           } else if (2 == index) {
+                     window.android.EventSiteView(vExtUrl2, vPackageName, vMarketInfo, vMarketDetail);
+           } else if (3 == index) {
+                     window.android.EventSiteView(vExtUrl3, vPackageName, vMarketInfo, vMarketDetail);
+           } else if (4 == index) {
+                     window.android.EventSiteView(vExtUrl4, vPackageName, vMarketInfo, vMarketDetail);
+           } else if (5== index) {
+                     window.android.EventSiteView(vExtUrl5, vPackageName, vMarketInfo, vMarketDetail);
+           }
+           
+           historySend('40');
+}
+
+function linkAppView() {
+           var osName = getParam("OSNAME");
+           
+           // Aos URL과 패키지명만 입력 되어 있고 ios 정보는 입력 되어 있지 않을 경우
+           if ( ((null != vAosUrl && "" != vAosUrl) && (null != vAosPackageName && "" != vAosPackageName))
+                     && ((null == vIosUrl || "" == vIosUrl) && ( null == vIosPackageName || "" == vIosPackageName ))) {
+                     
+                     // 안드로이드 사용자만 이용 가능
+                     if ("android" != osName) {
+                                alert("지원하지않는 OS 사용자 입니다.");
+                                return;
+                     } else {
+                                window.android.EventSiteView(vUrl, vAosPackageName, vMarketInfo, vAosUrl);
+                     }
+           }
+           
+           // Ios 정보만 입력 되어 있을 경우
+           if ( ((null != vIosUrl && "" != vIosUrl) && (null != vIosPackageName && "" != vIosPackageName))
+                     && ((null == vAosUrl || "" == vAosUrl) && ( null == vAosPackageName || "" == vAosPackageName ))) {
+                     
+                     // IOS 사용자만 이용 가능
+                     if ("ios" != osName) {
+                                alert("지원하지않는 OS 사용자 입니다.");
+                                return;
+                     } else {
+                                window.android.EventSiteView(vIosUrl, vIosPackageName, vMarketInfo, vUrl);
+                     }
+           }
+           
+           // AOS / IOS 둘다 입력되어 있을 경우
+           if ( ((null != vIosUrl && "" != vIosUrl) && (null != vIosPackageName && "" != vIosPackageName))
+                     && ((null != vAosUrl && "" != vAosUrl) && ( null != vAosPackageName && "" != vAosPackageName ))) {
+                     // 안드로이드 이동
+                     if ("android" == osName) {
+                                window.android.EventSiteView(vUrl, vAosPackageName, vMarketInfo, vAosUrl);
+                     // IOS 이동
+                     } else {
+                                window.android.EventSiteView(vIosUrl, vIosPackageName, vMarketInfo, vUrl);
+                     }
+           }
+           
+           historySend('40');
+}
+
+//결제페이지이동형
+function eventPay() {
+  //비회원일경우
+  if (!checkMember('40')) {
+    return;
+  }       
+
+  window.android.EventPay();
+  historySend('40');
+}
+
+//티켓 연동형
+function viewTicket() {
+  //비회원일경우
+  if (!checkMember('40')) {
+    return;
+  }
+  
+  window.android.EventTicketView(vUrl);
+  historySend('40');
+}
+
+//관련멤버십
+function relatedMem() {
+  //비회원일경우
+  if (!checkMember('31')) {
+    return;
+  }       
+
+  try{
+    window.android.EventRelationMembership(vRelatedMem, vEventId, '11'); 
+  } catch(e){
+    window.android.EventRelationMembership(vRelatedMem);
+  }
+  historySend('31');
+}
+
+//관련쿠폰
+function relatedCoupon() {
+  //비회원일경우
+  if (!checkMember('32')) {
+    return;
+  }       
+
+  try{
+    window.android.EventRelationCoupon(vRelatedCoupon, vEventId, '21'); 
+  } catch(e){
+    window.android.EventRelationCoupon(vRelatedCoupon);
+  }
+  historySend('32');
+}
+
+//관련스탬프
+function relatedStamp() {
+  //비회원일경우
+  if (!checkMember('33')) {
+    return;
+  }       
+
+  window.android.EventRelationStamp(vRelatedStamp);
+  historySend('33');
+}
+
+//히스토리저장
+function historySend(jobType){
+           
+  var memberId = $.getParameter("MemberId");
+    
+  $.ajax({
+    type: 'POST',
+    async: false,
+    url: '/event/VEventHistoryAjax.do?eventId=' + vEventId + '&memberId=' + memberId + '&jobType=' + jobType,
+    dataType: "json"  
+  });
+}
+
+//비회원 처리 true : 회원, false : 비회원
+function checkMember(jobType) {
+           var memberId = $.getParameter("MemberId");
+
+           //비회원일 경우 아이디 00000000으로 셋팅됨
+           if (memberId == "00000000") {
+                     try{
+                                window.android.GotoJoin();
+                                
+                                if (jobType != "") {
+                                           historySend(jobType);
+                                }
+                     } catch(e){
+                     }
+                     
+                     return false;
+           }
+           return true;
+}
+// 룰렛이벤트
+function roulette() {
+           window.android.RouletteEvent(vContentId);
+           
+           historySend('40');
+}
+// 출석이벤트이벤트
+function attend() {
+           window.android.AttendanceEvent();
+}
+
+var getParam = function(key) {
+           var _parammap = {};
+           document.location.search.replace(/\??(?:([^=]+)=([^&]*)&?)/g, function () {
+                     function decode(s) {
+                                return decodeURIComponent(s);
+                     }
+                     
+                     _parammap[decode(arguments[1])] = decode(arguments[2]);
+           });
+           
+           return _parammap[key];
+};
+
+/*
+           장기가입자 (WebView)
+           1. 장기가입자 확인 API 호출
+           2. 호출 성공시 장기가입자 일 경우 등록한 홈페이지를 띄움.
+           3. 장기가입자가 아닐 경우 Alert
+*/
+function longJoinWebView() {
+           var objNfcSgw, objHeader, objBody;
+           
+           $.ajax({
+                     type : "post",
+                     url : "/NfcSgw.do?ActionId=VEQ08",
+                     async : false,
+                     dataType : "json",
+                     beforeSend : function(xhr) {
+                                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                xhr.setRequestHeader("UICC", getParam("UICC"));
+                                xhr.setRequestHeader("OS", getParam("OS"));
+                                xhr.setRequestHeader("TOKEN", getParam("TOKEN"));
+                                xhr.setRequestHeader("CTN", getParam("CTN"));
+                                xhr.setRequestHeader("APPVER", getParam("APPVER"));
+                                xhr.setRequestHeader("APPLETVER", getParam("APPLETVER"));
+                                xhr.setRequestHeader("LTE3G", getParam("LTE3G"));
+                                xhr.setRequestHeader("REQUESTDATE", getParam("REQUESTDATE"));
+                                xhr.setRequestHeader("ISWIFI", getParam("ISWIFI"));
+                                xhr.setRequestHeader("OSNAME", getParam("OSNAME"));
+                                xhr.setRequestHeader("MODELNAME", getParam("MODELNAME"));
+                                xhr.setRequestHeader("ID", getParam("ID"));
+                                xhr.setRequestHeader("CARRIER", getParam("CARRIER"));
+                                xhr.setRequestHeader("PARAM1", getParam("PARAM1"));
+                                xhr.setRequestHeader("PARAM2", getParam("PARAM2"));
+                                xhr.setRequestHeader("PARAM3", getParam("PARAM3"));
+                     },
+                     success: function(data)
+                                {
+                                           if(data.NfcSgw){
+                                                     objNfcSgw = data.NfcSgw[0];
+                                                     objHeader = objNfcSgw.Header;
+                                                     objBody = objNfcSgw.Body.Detail;
+                                                     if(objHeader.Code == 200){
+                                                                if(objBody.resultCode == '10'){
+                                                                           //장기가입 고객
+                                                                           location.href=vUrl;
+                                                                }else{
+                                                                           alert("유플러스를 3년이상 이용해주신 고객님만 응모가능합니다.");
+                                                                }
+                                                     }else{
+                                                                alert(objHeader.Message);
+                                                     }
+                                           }else{
+                                                     alert("일시적인 네트워크 오류가 발생하였습니다. 다시 시도하세요.");
+                                           }
+                                },
+                     error : function (err)
+                     {
+                                alert("일시적인 네트워크 오류가 발생하였습니다. 다시 시도하세요.");
+                     }
+           });
+}
+
+/*
+           장기가입자 (APP)
+           1. 장기 가입자 확인 API 호출
+           2. API 호출 성공시 장기가입자 일 경우 Android/IOS APP Store로 이동
+           3. 장기가입자가 아닐 경우 Alert
+*/
+function longJoinApp() {
+           var objNfcSgw, objHeader, objBody;
+           
+           $.ajax({
+                     type : "post",
+                     url : "/NfcSgw.do?ActionId=VEQ08",
+                     async : false,
+                     dataType : "json",
+                     beforeSend : function(xhr) {
+                                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                xhr.setRequestHeader("UICC", getParam("UICC"));
+                                xhr.setRequestHeader("OS", getParam("OS"));
+                                xhr.setRequestHeader("TOKEN", getParam("TOKEN"));
+                                xhr.setRequestHeader("CTN", getParam("CTN"));
+                                xhr.setRequestHeader("APPVER", getParam("APPVER"));
+                                xhr.setRequestHeader("APPLETVER", getParam("APPLETVER"));
+                                xhr.setRequestHeader("LTE3G", getParam("LTE3G"));
+                                xhr.setRequestHeader("REQUESTDATE", getParam("REQUESTDATE"));
+                                xhr.setRequestHeader("ISWIFI", getParam("ISWIFI"));
+                                xhr.setRequestHeader("OSNAME", getParam("OSNAME"));
+                                xhr.setRequestHeader("MODELNAME", getParam("MODELNAME"));
+                                xhr.setRequestHeader("ID", getParam("ID"));
+                                xhr.setRequestHeader("CARRIER", getParam("CARRIER"));
+                                xhr.setRequestHeader("PARAM1", getParam("PARAM1"));
+                                xhr.setRequestHeader("PARAM2", getParam("PARAM2"));
+                                xhr.setRequestHeader("PARAM3", getParam("PARAM3"));
+                     },
+                     success: function(data)
+                                {
+                                           if(data.NfcSgw){
+                                                     objNfcSgw = data.NfcSgw[0];
+                                                     objHeader = objNfcSgw.Header;
+                                                     objBody = objNfcSgw.Body.Detail;
+                                                     if(objHeader.Code == 200){
+                                                                if(objBody.resultCode == '10'){
+                                                                           executeAppOrGoStore();
+                                                                }else{
+                                                                           alert("유플러스를 3년이상 이용해주신 고객님만 응모가능합니다.");
+                                                                }
+                                                     }else{
+                                                                alert(objHeader.Message);
+                                                     }
+                                           }else{
+                                                     alert("일시적인 네트워크 오류가 발생하였습니다. 다시 시도하세요.");
+                                           }
+                                },
+                     error : function (err)
+                     {
+                                alert("일시적인 네트워크 오류가 발생하였습니다. 다시 시도하세요.");
+                     }
+           });
+}
+
+/*
+           장기가입자 (새창)
+           1. 장기가입자 확인 API 호출
+           2. API 호출 성공시 장기가입자 일 경우 등록한 홈페이지를 웹 브라우저 새창으로 띄움.
+           3. 장기가입자가 아닐 경우 Alert
+*/
+function longJoinNewBrowser() {
+           var objNfcSgw, objHeader, objBody;
+           
+           $.ajax({
+                     type : "post",
+                     url : "/NfcSgw.do?ActionId=VEQ08",
+                     async : false,
+                     dataType : "json",
+                     beforeSend : function(xhr) {
+                                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                xhr.setRequestHeader("UICC", getParam("UICC"));
+                                xhr.setRequestHeader("OS", getParam("OS"));
+                                xhr.setRequestHeader("TOKEN", getParam("TOKEN"));
+                                xhr.setRequestHeader("CTN", getParam("CTN"));
+                                xhr.setRequestHeader("APPVER", getParam("APPVER"));
+                                xhr.setRequestHeader("APPLETVER", getParam("APPLETVER"));
+                                xhr.setRequestHeader("LTE3G", getParam("LTE3G"));
+                                xhr.setRequestHeader("REQUESTDATE", getParam("REQUESTDATE"));
+                                xhr.setRequestHeader("ISWIFI", getParam("ISWIFI"));
+                                xhr.setRequestHeader("OSNAME", getParam("OSNAME"));
+                                xhr.setRequestHeader("MODELNAME", getParam("MODELNAME"));
+                                xhr.setRequestHeader("ID", getParam("ID"));
+                                xhr.setRequestHeader("CARRIER", getParam("CARRIER"));
+                                xhr.setRequestHeader("PARAM1", getParam("PARAM1"));
+                                xhr.setRequestHeader("PARAM2", getParam("PARAM2"));
+                                xhr.setRequestHeader("PARAM3", getParam("PARAM3"));
+                     },
+                     success: function(data)
+                                {
+                                           if(data.NfcSgw){
+                                                     objNfcSgw = data.NfcSgw[0];
+                                                     objHeader = objNfcSgw.Header;
+                                                     objBody = objNfcSgw.Body.Detail;
+                                                     if(objHeader.Code == 200){
+                                                                if(objBody.resultCode == '10'){
+                                                                           //장기가입 고객
+                                                                           window.android.EventSiteView(vUrl, vPackageName, vMarketInfo, vMarketDetail);
+                                                                }else{
+                                                                           alert("유플러스를 3년이상 이용해주신 고객님만 응모가능합니다.");
+                                                                }
+                                                     }else{
+                                                                alert(objHeader.Message);
+                                                     }
+                                           }else{
+                                                     alert("일시적인 네트워크 오류가 발생하였습니다. 다시 시도하세요.");
+                                           }
+                                },
+                     error : function (err)
+                     {
+                                alert("일시적인 네트워크 오류가 발생하였습니다. 다시 시도하세요.");
+                     }
+           });
+}
+
+/*
+           App Store 로 이동하는 goAppStoreOrPlayStore() 함수 호출
+*/
+function executeAppOrGoStore() {
+           goAppStoreOrPlayStore();
+}
+
+/*
+           App Store URL을 셋팅하여 해당 URL로 이동
+*/
+function goAppStoreOrPlayStore() {
+           var storeURL = "";
+           if ("android" == getParam("OSNAME")) {
+                     storeURL = "https://play.google.com/store/apps/details?id=uplus.membership";
+           } else {
+                     storeURL = "http://itunes.apple.com/app/id958811075";
+           }
+           window.android.EventSiteView(storeURL, vPackageName, vMarketInfo, vMarketDetail);
+}
+
+// 제휴몰 이벤트
+function cooperativeMall() {
+
+           //비회원일경우
+           if (!checkMember('40')) {
+                     return;
+           }
+
+           window.android.EventMallSiteView(vExtCardCode,vExtUrl1);
+           
+           historySend('40');
+}
+
+// 쿠폰상점 연결 이벤트
+function couponShop() {
+
+           window.android.EventCouponPageShop();
+           
+           historySend('40');
+}
+
+// 쿠폰바로발급
+function couponSync(couponId){
+
+           //비회원일경우
+           if (!checkMember('20')) {
+                     return;
+           }          
+           
+           var objNfcSgw, objHeader, objBody;
+           if(couponId != ""){
+                     $.ajax({
+                                type : "post",
+                                url : "/NfcSgw.do?ActionId=VCA03&IsCouSyncEvent=Y&CouponId="+couponId,
+                                async : false,
+                                dataType : "json",
+                                beforeSend : function(xhr) {
+                                           xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                           xhr.setRequestHeader("UICC", getParam("UICC"));
+                                           xhr.setRequestHeader("OS", getParam("OS"));
+                                           xhr.setRequestHeader("TOKEN", getParam("TOKEN"));
+                                           xhr.setRequestHeader("CTN", getParam("CTN"));
+                                           xhr.setRequestHeader("APPVER", getParam("APPVER"));
+                                           xhr.setRequestHeader("APPLETVER", getParam("APPLETVER"));
+                                           xhr.setRequestHeader("LTE3G", getParam("LTE3G"));
+                                           xhr.setRequestHeader("REQUESTDATE", getParam("REQUESTDATE"));
+                                           xhr.setRequestHeader("ISWIFI", getParam("ISWIFI"));
+                                           xhr.setRequestHeader("OSNAME", getParam("OSNAME"));
+                                           xhr.setRequestHeader("MODELNAME", getParam("MODELNAME"));
+                                           xhr.setRequestHeader("ID", getParam("ID"));
+                                           xhr.setRequestHeader("CARRIER", getParam("CARRIER"));
+                                           xhr.setRequestHeader("PARAM1", getParam("PARAM1"));
+                                           xhr.setRequestHeader("PARAM2", getParam("PARAM2"));
+                                           xhr.setRequestHeader("PARAM3", getParam("PARAM3"));
+                                },
+                                success: function(data)
+                                           {
+                                                     if(data.NfcSgw){
+                                                                objNfcSgw = data.NfcSgw[0];
+                                                                objHeader = objNfcSgw.Header;
+                                                                objBody = objNfcSgw.Body.Detail;
+                                                                if(objHeader.Code == 200){
+                                                                           //쿠폰 발급 후 무조건 동기화 요청
+                                                                           window.android.EventCouponSync();
+                                                                }else{
+                                                                           window.android.EventPopUpShow(objHeader.Message);
+                                                                }
+                                                     }
+                                           },
+                                error : function (err)
+                                {
+                                           alert("일시적인 네트워크 오류가 발생하였습니다. 다시 시도하세요.");
+                                }
+                     });
+           }
+                     
+           
+}
+
+// 광고수신동의참여형 참여
+function adTermsAgree(){
+           var eventEnterYn = $.getParameter("EventEnterYn"); //이벤트 참여여부
+           var eventADEnterYn = $.getParameter("EventADEnterYn"); //광고수신동의형 참여 가능 여부
+           
+           var date = new Date();
+    var year = date.getFullYear();
+    var month = ("0" + (1 + date.getMonth())).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+    var nowDate = year + "." + month + "." + day;
+           //비회원일경우
+           if (!checkMember('20')) {
+                     return;
+           }          
+           
+           if(eventADEnterYn != 'Y'){
+                     alert("이벤트 참여 대상이 아닙니다.");
+                     return;
+           }
+           
+           if(eventEnterYn == 'Y'){
+                     alert("이미 참여하셨습니다.");
+                     return;
+           }
+           
+           var adAgreeFlag=false;
+           //광고수신동의 약관 처리
+           var objNfcSgw, objHeader, objBody;
+           $.ajax({
+                     type : "post",
+                     url : "/NfcSgw.do?ActionId=VIA16&TermsId="+vAdTermsId+"&TermsYn=Y&TermsVerId="+vTermsVerId,
+                     async : false,
+                     dataType : "json",
+                     beforeSend : function(xhr) {
+                                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                xhr.setRequestHeader("UICC", getParam("UICC"));
+                                xhr.setRequestHeader("OS", getParam("OS"));
+                                xhr.setRequestHeader("TOKEN", getParam("TOKEN"));
+                                xhr.setRequestHeader("CTN", getParam("CTN"));
+                                xhr.setRequestHeader("APPVER", getParam("APPVER"));
+                                xhr.setRequestHeader("APPLETVER", getParam("APPLETVER"));
+                                xhr.setRequestHeader("LTE3G", getParam("LTE3G"));
+                                xhr.setRequestHeader("REQUESTDATE", getParam("REQUESTDATE"));
+                                xhr.setRequestHeader("ISWIFI", getParam("ISWIFI"));
+                                xhr.setRequestHeader("OSNAME", getParam("OSNAME"));
+                                xhr.setRequestHeader("MODELNAME", getParam("MODELNAME"));
+                                xhr.setRequestHeader("ID", getParam("ID"));
+                                xhr.setRequestHeader("CARRIER", getParam("CARRIER"));
+                                xhr.setRequestHeader("PARAM1", getParam("PARAM1"));
+                                xhr.setRequestHeader("PARAM2", getParam("PARAM2"));
+                                xhr.setRequestHeader("PARAM3", getParam("PARAM3"));
+                     },
+                     success: function(data)
+                                {
+                                           if(data.NfcSgw){
+                                                     objNfcSgw = data.NfcSgw[0];
+                                                     objHeader = objNfcSgw.Header;
+                                                     objBody = objNfcSgw.Body.Detail;
+                                                     if(objHeader.Code == 200){
+                                                                adAgreeFlag = true;
+                                                     }else{
+                                                                adAgreeFlag = false;
+                                                     }
+                                           }
+                                },
+                     error : function (err)
+                     {
+                                alert("일시적인 네트워크 오류가 발생하였습니다. 다시 시도하세요.");
+                     }
+           });
+           
+           //알림 -> 앱 , 문자 알림 동의 처리
+           if(adAgreeFlag == true){
+                     var objNfcSgw, objHeader, objBody;
+                     $.ajax({
+                                type : "post",
+                                url : "/NfcSgw.do?ActionId=VGA31&AdAlram=10&SmsAlram=10",
+                                async : false,
+                                dataType : "json",
+                                beforeSend : function(xhr) {
+                                           xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                           xhr.setRequestHeader("UICC", getParam("UICC"));
+                                           xhr.setRequestHeader("OS", getParam("OS"));
+                                           xhr.setRequestHeader("TOKEN", getParam("TOKEN"));
+                                           xhr.setRequestHeader("CTN", getParam("CTN"));
+                                           xhr.setRequestHeader("APPVER", getParam("APPVER"));
+                                           xhr.setRequestHeader("APPLETVER", getParam("APPLETVER"));
+                                           xhr.setRequestHeader("LTE3G", getParam("LTE3G"));
+                                           xhr.setRequestHeader("REQUESTDATE", getParam("REQUESTDATE"));
+                                           xhr.setRequestHeader("ISWIFI", getParam("ISWIFI"));
+                                           xhr.setRequestHeader("OSNAME", getParam("OSNAME"));
+                                           xhr.setRequestHeader("MODELNAME", getParam("MODELNAME"));
+                                           xhr.setRequestHeader("ID", getParam("ID"));
+                                           xhr.setRequestHeader("CARRIER", getParam("CARRIER"));
+                                           xhr.setRequestHeader("PARAM1", getParam("PARAM1"));
+                                           xhr.setRequestHeader("PARAM2", getParam("PARAM2"));
+                                           xhr.setRequestHeader("PARAM3", getParam("PARAM3"));
+                                },
+                                success: function(data)
+                                           {
+                                                     if(data.NfcSgw){
+                                                                objNfcSgw = data.NfcSgw[0];
+                                                                objHeader = objNfcSgw.Header;
+                                                                objBody = objNfcSgw.Body.Detail;
+                                                                if(objHeader.Code == 200){
+                                                                           adAgreeFlag = true;
+                                                                }else{
+                                                                           adAgreeFlag = false;
+                                                                }
+                                                     }
+                                           },
+                                error : function (err)
+                                {
+                                           alert("일시적인 네트워크 오류가 발생하였습니다. 다시 시도하세요.");
+                                }
+                     });
+           }else{
+                     alert("일시적인 네트워크 오류가 발생하였습니다. 다시 시도하세요.");
+           }
+           
+           var rtnEvent = "";
+           //광고수신 약관 및 앱알림 , 문자알림 모두 성공 일 경우 노티
+           if(adAgreeFlag == true){
+                     rtnEvent = getEnterEvent();
+                     if(rtnEvent == "00"){
+                                alert("이벤트 참여가 완료되었습니다.\n혜택 알림이 ON으로 변경되었습니다.");
+                                alert(nowDate+"에 U+멤버스 광고 수신에 동의하였습니다."); 
+                                $("#adTermsBtn").find("a").attr("href","javascript:adTermsAgreeCheck()")
+                                return;
+                     }else if(rtnEvent == "10"){
+          alert("응모에 실패하였습니다. 잠시 후 다시 시도해 주세요.");
+                       return;
+        }else if(rtnEvent == "20"){
+          alert("이미 참여하셨습니다.");
+                       return;
+        }else if(rtnEvent == "30"){
+          alert("이벤트가 종료되었습니다.");
+                       return;
+        }else{
+                                alert("이벤트에 참여가 실패 하였습니다. 다시 시도하세요.");
+                                return;
+                     }
+           }else{
+                     alert("일시적인 네트워크 오류가 발생하였습니다. 다시 시도하세요.");
+                     return;
+           }
+           
+}
+
+function adTermsAgreeCheck(){
+           alert("이미 참여하셨습니다.");
+           return;
+}
+
+</script>
+<link rel="stylesheet" href="keyframes.css">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+                     
+	<section id="event-wrap">
+		<h1 class="a11y-hidden">2월 혜택알림동의 이벤트</h1>
+    
+		<div class="sec01">
+			<img src="sec_01.png" alt="2월 혜택알림동의 이벤트">
+      
+      <div class="paper-firecracker">
+        <img src="paper-firecracker.png" alt="종이폭죽 이미지">
+      </div>
+
+      <div class="coupon1">
+        <img src="coupon1.png" alt="쿠폰 이미지">
+      </div>
+      <div class="coupon2">
+        <img src="coupon2.png" alt="쿠폰 이미지">
+      </div>
+      <div class="coupon3">
+        <img src="coupon3.png" alt="쿠폰 이미지">
+      </div>
+
+      <div class="gift1">
+        <img src="gift1.png" alt="선물상자 이미지">
+      </div>
+      <div class="gift2">
+        <img src="gift2.png" alt="선물상자 이미지">
+      </div>
+      <div class="gift3">
+        <img src="gift3.png" alt="선물상자 이미지">
+      </div>
+
+      <div class="coins">
+        <img src="coins.png" alt="코인들 이미지">
+      </div>
+      
+      <div class="off">
+        <img src="off.png" alt="off background img">
+      </div>
+      <div class="on">
+        <img src="on.png" alt="on background img">
+      </div>
+      <div class="one_button">
+        <img src="button_one.png" alt="button img">
+      </div>
+
+      <div class="btn-arrow-right">
+				<img src="arrow_right.png" alt="">
+			</div>
+			<!-- 화면에 표시되는 참여하기 버튼 - 버튼이 위치해야하는 곳에 삽입 -->
+      <div id="adTermsBtn" name="adTermsBtn">
+          <a href="javascript:adTermsAgree();">참여하기</a>
+      </div>
+		</div>
+		
+		<div class="sec02">
+			<img src="sec_02.png" alt="이벤트 참여방법">
+		</div>
+		
+		<div class="sec03">
+			<img src="sec_03.png" alt="이벤트 혜택">
+		</div>
+
+		<div class="sec04">
+			<img src="sec_04.png" alt="꼭 읽어보세요">
+		</div>
+		
+	</section>
+                     
+  <!-- 리스트 뿌려주기 -->
+</body>
+</html>
